@@ -32,7 +32,7 @@ if not exist "%LOGS%\shell.log" goto :done
 echo.
 echo === Host process summary ==================================================
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$f = '%LOGS%\shell.log';" ^
+  "$f = (Join-Path $env:LOGS 'shell.log');" ^
   "$hosts = Select-String -Path $f -Pattern 'host=(\S+)' | ForEach-Object { $_.Matches[0].Groups[1].Value } | Sort-Object -Unique;" ^
   "foreach ($h in $hosts) {" ^
   "  if ($h -imatch '^dllhost\.exe$') { Write-Host ('  ' + $h + '   <-- CORRECT: isolated from Explorer') -ForegroundColor Green }" ^

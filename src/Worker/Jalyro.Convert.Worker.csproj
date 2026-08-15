@@ -22,7 +22,7 @@
 
     <AssemblyName>Jalyro.Convert.Worker</AssemblyName>
     <RootNamespace>Jalyro.Convert.Worker</RootNamespace>
-    <Version>0.9.33</Version>
+    <Version>0.9.34</Version>
 
     <PlatformTarget>x64</PlatformTarget>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>

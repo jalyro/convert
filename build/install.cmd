@@ -26,9 +26,11 @@ echo   Package  : %STAGE%\Jalyro.Convert.msix
 echo   External : %STAGE%
 echo.
 
+REM  Paths reach PowerShell through the environment. Interpolating them
+REM  into a quoted literal breaks on a directory named O'Brien.
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "try {" ^
-  "  Add-AppxPackage -Path '%STAGE%\Jalyro.Convert.msix' -ExternalLocation '%STAGE%' -ErrorAction Stop;" ^
+  "  Add-AppxPackage -Path (Join-Path $env:STAGE 'Jalyro.Convert.msix') -ExternalLocation $env:STAGE -ErrorAction Stop;" ^
   "  Write-Host '[ok] Registered.' -ForegroundColor Green" ^
   "} catch {" ^
   "  Write-Host '[FAIL] ' $_.Exception.Message -ForegroundColor Red;" ^

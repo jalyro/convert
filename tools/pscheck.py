@@ -30,6 +30,38 @@ import sys
 #  Shared string/comment stripping (unchanged behaviour from the .ps1 checker)
 # ---------------------------------------------------------------------------
 
+def unterminated_string(text):
+    """Offset of a quote that is never closed, or -1.
+
+    The docstring promised balanced quotes and nothing checked them: both
+    Write-Host 'x and Write-Host \"x were reported structurally OK.
+    """
+    i, n = 0, len(text)
+    while i < n:
+        c = text[i]
+        if c == '#' and (i == 0 or text[i-1] != '`'):
+            while i < n and text[i] != '\n': i += 1
+            continue
+        if text.startswith('<#', i):
+            j = text.find('#>', i)
+            if j < 0: return i
+            i = j + 2
+            continue
+        if c in ('"', "'"):
+            start, quote = i, c
+            i += 1
+            closed = False
+            while i < n:
+                if text[i] == '`' and quote == '"': i += 2; continue
+                if text[i] == quote:
+                    if i + 1 < n and text[i+1] == quote: i += 2; continue
+                    i += 1; closed = True; break
+                i += 1
+            if not closed: return start
+            continue
+        i += 1
+    return -1
+
 def strip_strings_and_comments(text):
     out, i, n = [], 0, len(text)
     while i < n:
@@ -58,8 +90,14 @@ def strip_strings_and_comments(text):
 #  Structural checks (brace balance, orphaned elseif/else)
 # ---------------------------------------------------------------------------
 
-def structural_problems(code):
+def structural_problems(code, raw=None):
     problems = []
+    if raw is not None:
+        u = unterminated_string(raw)
+        if u >= 0:
+            line = raw[:u].count('\n') + 1
+            problems.append(f"line {line}: string opened with {raw[u]!r} is never closed")
+            return problems  # every later count is meaningless
     for ch, close in (('{','}'), ('(',')'), ('[',']')):
         if code.count(ch) != code.count(close):
             problems.append(f"unbalanced {ch}{close}: {code.count(ch)} open, {code.count(close)} close")
@@ -284,7 +322,7 @@ def extract_blocks(text):
 # ---------------------------------------------------------------------------
 
 def check_ps1(raw):
-    problems = structural_problems(strip_strings_and_comments(raw))
+    problems = structural_problems(strip_strings_and_comments(raw), raw)
     if not requires_ps7(raw):
         problems += ps51_problems(strip_strings_and_comments(raw))
     return problems
@@ -296,7 +334,7 @@ def check_block(b):
         problems.append(f"'#' at position {h} of the joined command - at runtime"
                         " it comments out everything after it")
     stripped = strip_strings_and_comments(b.text)
-    problems += structural_problems(stripped)
+    problems += structural_problems(stripped, b.text)
     if b.host == 'powershell':  # pwsh blocks may use PS 7 APIs
         problems += ps51_problems(stripped)
     return problems
@@ -342,6 +380,14 @@ def selftest():
          not check_ps1('#requires -Version 7\n$p.Kill($true)\n')),
         ("orphaned else still detected",
          any('else' in p for p in check_ps1('if ($a) { 1 }\nfoo\nelse { 2 }\n'))),
+        ("unterminated single quote is caught",
+         any('never closed' in p for p in check_ps1("Write-Host 'unfinished\n"))),
+        ("unterminated double quote is caught",
+         any('never closed' in p for p in check_ps1('Write-Host \"unfinished\n'))),
+        ("an apostrophe inside a comment is not a string",
+         not check_ps1("# a user's path\nWrite-Host 'ok'\n")),
+        ("doubled quotes are an escape, not a terminator",
+         not check_ps1("Write-Host 'it''s fine'\n")),
     ]
     ok = True
     for name, passed in checks:

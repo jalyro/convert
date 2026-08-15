@@ -17,11 +17,20 @@ REM  ffmpeg is matched by PATH, not just by name. The two Jalyro names are
 REM  distinctive; "ffmpeg" is not, and killing every ffmpeg.exe would end a
 REM  user's own encode. Program.cs already scopes its orphan sweep this way.
 
+REM  Paths go through the environment, not interpolated into a quoted
+REM  PowerShell literal: a directory named O'Brien closes the string early.
+REM
+REM  Roots get a trailing separator before comparison. Without it
+REM  "...\jalyro-convert" also prefixes "...\jalyro-convert-old" and the
+REM  script kills the unrelated encode it promises not to touch.
+set "HERE=%~dp0"
+
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "$roots = @();" ^
-  "$r = Resolve-Path '%~dp0..' -ErrorAction SilentlyContinue;" ^
+  "$r = Resolve-Path (Join-Path $env:HERE '..') -ErrorAction SilentlyContinue;" ^
   "if ($r) { $roots += $r.Path };" ^
   "$roots += (Join-Path $env:LOCALAPPDATA 'Programs\JalyroConvert');" ^
+  "$roots = @($roots | ForEach-Object { $_.TrimEnd('\') + '\' });" ^
   "$names = 'Jalyro.Convert.Host','Jalyro.Convert.Worker','ffmpeg';" ^
   "$found = @(Get-Process -Name $names -ErrorAction SilentlyContinue | Where-Object {" ^
   "    if ($_.Name -ne 'ffmpeg') { $true } else {" ^

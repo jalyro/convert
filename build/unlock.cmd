@@ -20,6 +20,10 @@ REM ===========================================================================
 
 echo --- Unlocking stage ---
 
+REM  Paths reach PowerShell through the environment. Interpolating them
+REM  into a quoted literal breaks on a directory named O'Brien.
+set "HERE=%~dp0"
+
 call "%~dp0stop-host.cmd"
 
 REM The sparse package registration keeps the shell DLL loaded in a surrogate.
@@ -34,7 +38,7 @@ REM  the session also takes down unrelated thumbnail and preview handlers.
 REM  If a surrogate cannot be inspected it is left alone; the check below
 REM  then names it rather than this script killing it blind.
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$stage = (Resolve-Path '%~dp0..\stage' -ErrorAction SilentlyContinue).Path;" ^
+  "$stage = (Resolve-Path (Join-Path $env:HERE '..\stage') -ErrorAction SilentlyContinue).Path;" ^
   "if (-not $stage) { exit 0 };" ^
   "foreach ($d in @(Get-Process -Name dllhost -ErrorAction SilentlyContinue)) {" ^
   "  $mine = $false;" ^
@@ -51,7 +55,7 @@ REM  silently eats commands pasted after this script.
 ping -n 2 127.0.0.1 >nul
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$stage = (Resolve-Path '%~dp0..\stage' -ErrorAction SilentlyContinue).Path;" ^
+  "$stage = (Resolve-Path (Join-Path $env:HERE '..\stage') -ErrorAction SilentlyContinue).Path;" ^
   "if (-not $stage) { Write-Host '[ok] No stage directory yet.'; exit 0 };" ^
   "$held = Get-Process | Where-Object { $_.Modules | Where-Object { $_.FileName -like ($stage + '\*') } };" ^
   "if ($held) { Write-Host '[WARN] Still holding files:' -ForegroundColor Yellow;" ^

@@ -23,7 +23,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'csharp', 'cpp' ]
+        # C++ is not analysed. CodeQL traces MSBuild-driven builds; this
+        # project compiles the shell extension with direct cl.exe calls and
+        # has no project file, so every database finalized with "detected
+        # code written in C/C++ but could not process any of it" - build-mode
+        # and batch nesting were both ruled out by experiment. Analysing a
+        # separate .vcxproj written only for CodeQL would analyse something
+        # other than what ships. The extension is two files that parse no
+        # media and build under /W4 /WX /GS /guard:cf; the untrusted bytes
+        # are all handled in the C# Worker, which is analysed.
+        language: [ 'csharp' ]
 
     steps:
       - uses: actions/checkout@v7
@@ -41,29 +50,7 @@ jobs:
           # between init and analyze - but it has to be stated.
           build-mode: manual
 
-      # Not autobuild: it looks for an MSBuild project or solution, and the
-      # shell extension has neither - it is compiled by direct cl.exe calls.
-      # It failed with "unable to automatically build your code".
-      - name: Build C++ for CodeQL
-        if: matrix.language == 'cpp'
-        shell: cmd
-        run: |
-          REM TEST 0.9.33: vcvars called directly, not through ci-vcvars.cmd.
-          REM Hardcoded path is exactly what 0.9.25 removed - one run only, to
-          REM see whether the extra batch nesting is what loses the tracer.
-          call "C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          if errorlevel 1 exit /b 1
-          if not exist out mkdir out
-          rc.exe /nologo /fo out\Shell.res /I src\Shell src\Shell\Shell.rc
-          cl.exe /nologo /c /EHsc /W4 /std:c++20 /permissive- /O2 /MT ^
-                 /DUNICODE /D_UNICODE /DWIN32 /D_WINDOWS /DNDEBUG /I src\Shell ^
-                 /Fo:out\ src\Shell\ExplorerCommand.cpp src\Shell\Common.cpp
-          link.exe /nologo /DLL /DEF:src\Shell\Shell.def /OUT:out\Jalyro.Convert.Shell.dll ^
-                   out\ExplorerCommand.obj out\Common.obj out\Shell.res ^
-                   shlwapi.lib ole32.lib oleaut32.lib shell32.lib user32.lib advapi32.lib kernel32.lib
-
       - name: Build C# for CodeQL
-        if: matrix.language == 'csharp'
         run: |
           dotnet build src/Host/Jalyro.Convert.Host.csproj -c Release --nologo
           dotnet build src/Worker/Jalyro.Convert.Worker.csproj -c Release --nologo

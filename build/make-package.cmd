@@ -177,9 +177,9 @@ REM Verify independently. Checking only that ffmpeg EXISTS meant a fetch that
 REM had already failed its hash check could still be packaged by anyone who
 REM missed the earlier error.
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$pin = Get-Content '%ROOT%\build\ffmpeg-expected.sha256' -ErrorAction SilentlyContinue |" ^
+  "$pin = Get-Content (Join-Path $env:ROOT 'build\ffmpeg-expected.sha256') -ErrorAction SilentlyContinue |" ^
   "       Where-Object { $_ -and -not $_.TrimStart().StartsWith('#') } | Select-Object -First 1;" ^
-  "$actual = (Get-FileHash '%STAGE%\ffmpeg\ffmpeg.exe' -Algorithm SHA256).Hash;" ^
+  "$actual = (Get-FileHash (Join-Path $env:STAGE 'ffmpeg\ffmpeg.exe') -Algorithm SHA256).Hash;" ^
   "if (-not $pin) {" ^
   "  Write-Host '[WARN] ffmpeg is UNPINNED. Fine for development; make-installer will refuse.' -ForegroundColor Yellow;" ^
   "  exit 0 };" ^

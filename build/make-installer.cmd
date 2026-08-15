@@ -38,15 +38,15 @@ REM A release must be reproducible. Without a pin, the GPL source offer cannot
 REM name the exact binary shipped, and an upstream replacement would go
 REM unnoticed. Development builds may be unpinned; installers may not.
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$pin = Get-Content '%ROOT%\build\ffmpeg-expected.sha256' -ErrorAction SilentlyContinue |" ^
+  "$pin = Get-Content (Join-Path $env:ROOT 'build\ffmpeg-expected.sha256') -ErrorAction SilentlyContinue |" ^
   "       Where-Object { $_ -and -not $_.TrimStart().StartsWith('#') } | Select-Object -First 1;" ^
   "if (-not $pin) {" ^
   "  Write-Host '[FAIL] ffmpeg is not pinned.' -ForegroundColor Red;" ^
   "  Write-Host '       Record the SHA-256 in build\ffmpeg-expected.sha256 before';" ^
   "  Write-Host '       building an installer. Current staged binary:';" ^
-  "  Write-Host ('       ' + (Get-FileHash '%ROOT%\stage\ffmpeg\ffmpeg.exe' -Algorithm SHA256).Hash);" ^
+  "  Write-Host ('       ' + (Get-FileHash (Join-Path $env:ROOT 'stage\ffmpeg\ffmpeg.exe') -Algorithm SHA256).Hash);" ^
   "  exit 1 };" ^
-  "$actual = (Get-FileHash '%ROOT%\stage\ffmpeg\ffmpeg.exe' -Algorithm SHA256).Hash;" ^
+  "$actual = (Get-FileHash (Join-Path $env:ROOT 'stage\ffmpeg\ffmpeg.exe') -Algorithm SHA256).Hash;" ^
   "if ($pin.Trim() -ne $actual) { Write-Host '[FAIL] staged ffmpeg does not match the pin.' -ForegroundColor Red; exit 1 };" ^
   "Write-Host '[ok] ffmpeg pinned and verified.'"
 if errorlevel 1 exit /b 1
@@ -68,5 +68,5 @@ echo [ok] Installer built:
 dir /b "%ROOT%\dist\*.exe"
 echo.
 echo  Sign it before distributing:
-echo      signtool sign /sha1 ^<thumbprint^> /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 "%ROOT%\dist\JalyroConvert-Setup-0.9.33.exe"
+echo      signtool sign /sha1 ^<thumbprint^> /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 "%ROOT%\dist\JalyroConvert-Setup-0.9.34.exe"
 exit /b 0

@@ -29,7 +29,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "  -KeyUsage DigitalSignature -FriendlyName 'Jalyro Dev'" ^
   "  -CertStoreLocation 'Cert:\CurrentUser\My'" ^
   "  -TextExtension @('2.5.29.37={text}1.3.6.1.5.5.7.3.3','2.5.29.19={text}');" ^
-  "Export-Certificate -Cert $c -FilePath '%ROOT%\dev-cert.cer' | Out-Null;" ^
+  "Export-Certificate -Cert $c -FilePath (Join-Path $env:ROOT 'dev-cert.cer') | Out-Null;" ^
   "Write-Host ('Thumbprint : ' + $c.Thumbprint);" ^
   "Write-Host ('Subject    : ' + $c.Subject);" ^
   "Write-Host '';" ^
@@ -37,7 +37,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "Write-Host 'normalised the RDN order from what this script requested.' -ForegroundColor Yellow;" ^
   "Write-Host '';" ^
   "Write-Host 'NEXT, in an ELEVATED PowerShell, run:' -ForegroundColor Green;" ^
-  "Write-Host ('  Import-Certificate -FilePath ''%ROOT%\dev-cert.cer'' -CertStoreLocation Cert:\LocalMachine\TrustedPeople') -ForegroundColor Green"
+  "Write-Host ('  Import-Certificate -FilePath ''' + (Join-Path $env:ROOT 'dev-cert.cer') + ''' -CertStoreLocation Cert:\LocalMachine\TrustedPeople') -ForegroundColor Green"
 
 echo.
 endlocal

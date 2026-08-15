@@ -3,6 +3,29 @@
 Pre-1.0. Versions before 0.9 were development phases and are not listed
 individually.
 
+## 0.9.34
+- `stop-host.cmd` could kill an unrelated ffmpeg. Roots were compared with
+  `StartsWith` and no trailing separator, so a tree beside this one -
+  `jalyro-convert-old` next to `jalyro-convert` - matched, reintroducing
+  exactly the harm 0.9.23 set out to prevent
+- Build scripts no longer interpolate `%ROOT%`, `%STAGE%`, `%LOGS%` or
+  `%~dp0` into single-quoted PowerShell literals. A path such as
+  `C:\Users\O'Brien\...` closed the string early and the command would not
+  parse. Paths now reach PowerShell through the environment
+- `uninstall.cmd` ignored a failed `stop-host.cmd` and a failed
+  `Remove-AppxPackage`, then printed UNINSTALLED regardless
+- `pscheck.py` claimed to check quote balance but reported an unterminated
+  string as structurally OK. It now reports the opening quote and stops
+  there, since every later brace count is meaningless. Selftest is 15
+  assertions
+- CodeQL no longer analyses C++. Its tracer never observed the compiler:
+  the database finalized empty under `build-mode: undefined`, `manual`, and
+  with the vcvars nesting removed. CodeQL traces MSBuild-driven builds and
+  this project compiles with direct `cl.exe` calls by design. A `.vcxproj`
+  written only for CodeQL would analyse something other than what ships.
+  The C# Worker, where untrusted bytes are parsed, is still analysed
+- The hardcoded Visual Studio path from the 0.9.33 diagnostic is gone
+
 ## 0.9.33
 - TEST: the CodeQL C++ step calls `vcvars64.bat` directly instead of going
   through `ci-vcvars.cmd`, to find out whether the extra batch nesting is

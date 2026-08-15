@@ -4,8 +4,8 @@
 IDI_CONVERT ICON "convert.ico"
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION    0,9,33,0
- PRODUCTVERSION 0,9,33,0
+ FILEVERSION    0,9,34,0
+ PRODUCTVERSION 0,9,34,0
  FILEFLAGSMASK  0x3fL
  FILEFLAGS      0x0L
  FILEOS         VOS_NT_WINDOWS32
@@ -18,12 +18,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName",      "Petrus Sprenkels"
             VALUE "FileDescription",  "Jalyro Convert shell extension"
-            VALUE "FileVersion",      "0.9.33.0"
+            VALUE "FileVersion",      "0.9.34.0"
             VALUE "InternalName",     "Jalyro.Convert.Shell.dll"
             VALUE "LegalCopyright",   "Copyright (c) 2026 Petrus Sprenkels. MIT licensed."
             VALUE "OriginalFilename", "Jalyro.Convert.Shell.dll"
             VALUE "ProductName",      "Jalyro Convert"
-            VALUE "ProductVersion",   "0.9.33.0"
+            VALUE "ProductVersion",   "0.9.34.0"
         END
     END
     BLOCK "VarFileInfo"
