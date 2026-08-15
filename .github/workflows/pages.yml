@@ -1,0 +1,49 @@
+name: pages
+
+# Publishes site/ to https://jalyro.github.io/convert/
+#
+# A workflow rather than the "deploy from a branch" setting, because Pages can
+# only serve a branch root or /docs, and docs/ holds developer notes that have
+# no business being the public site. This keeps site/ as the site.
+#
+# Requires Settings > Pages > Source set to "GitHub Actions". Without it,
+# deploy-pages fails with a "Pages site not configured" error.
+on:
+  push:
+    branches: [ main ]
+    # The workflow file itself is listed so the first push runs it.
+    paths:
+      - 'site/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write     # deploy-pages proves the deployment came from this repo
+
+# Never let two deployments race. Not cancel-in-progress: a half-finished
+# deployment that gets cancelled leaves the live site in whatever state it
+# reached.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # No configure-pages step: that exists to hand a base path to a site
+      # generator. This is one static file with inline CSS and no assets.
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

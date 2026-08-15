@@ -3,6 +3,13 @@
 Pre-1.0. Versions before 0.9 were development phases and are not listed
 individually.
 
+## Unreleased
+- `.github/workflows/pages.yml` publishes `site/` to GitHub Pages at
+  https://jalyro.github.io/convert/. A workflow rather than the branch
+  setting, because Pages serves only a branch root or `/docs`, and `docs/`
+  holds developer notes. No version bump: nothing that ships changed, and a
+  version bump would imply a rebuild - which would imply signing again
+
 ## 0.9.35
 - `build\set-publisher.cmd <thumbprint>` and `build\set-publisher.cmd /revert`
   replace the two hand-pasted one-liners that patched and restored
