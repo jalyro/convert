@@ -65,7 +65,7 @@
   <Identity
     Name="Jalyro.Convert"
     Publisher="CN=REPLACE_ME_WITH_EXACT_CERT_SUBJECT"
-    Version="0.9.32.0"
+    Version="0.9.33.0"
     ProcessorArchitecture="neutral" />
 
   <Properties>

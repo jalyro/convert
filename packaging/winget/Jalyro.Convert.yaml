@@ -6,7 +6,7 @@
 # REPLACE_ME markers must be filled before submission.
 
 PackageIdentifier: Jalyro.Convert
-PackageVersion: 0.9.32
+PackageVersion: 0.9.33
 DefaultLocale: en-US
 ManifestType: version
 ManifestVersion: 1.6.0

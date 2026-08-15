@@ -3,6 +3,12 @@
 Pre-1.0. Versions before 0.9 were development phases and are not listed
 individually.
 
+## 0.9.33
+- TEST: the CodeQL C++ step calls `vcvars64.bat` directly instead of going
+  through `ci-vcvars.cmd`, to find out whether the extra batch nesting is
+  what loses the CodeQL tracer. The hardcoded Visual Studio path is what
+  0.9.25 removed on purpose; this is one diagnostic run, not a keeper
+
 ## 0.9.32
 - CodeQL `init` now sets `build-mode: manual`. The C++ database finalized
   with "detected code written in C/C++ but could not process any of it" -
