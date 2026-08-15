@@ -4,6 +4,8 @@ Pre-1.0. Versions before 0.9 were development phases and are not listed
 individually.
 
 ## Unreleased
+- The winget manifests carry the real installer hash and the corrected asset
+  name, so `packaging/winget` is submittable rather than a template
 - The installer filename no longer carries the version:
   `JalyroConvert-Setup.exe`, not `JalyroConvert-Setup-0.9.35.exe`. GitHub builds
   a permanent download URL out of the asset name, so a version in it breaks the

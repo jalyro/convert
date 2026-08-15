@@ -3,7 +3,12 @@
 # Submit with:  wingetcreate submit packaging/winget
 # or open a PR against microsoft/winget-pkgs.
 #
-# REPLACE_ME markers must be filled before submission.
+# The installer URL points at a version tag, not /releases/latest/: a manifest
+# is pinned to one version, so its URL and hash must stay immutable. Only the
+# website uses the moving link.
+#
+# Schema stays at 1.6.0 deliberately. winget supports several schema versions
+# so older clients can still install; the community repository lags the newest.
 
 PackageIdentifier: Jalyro.Convert
 PackageVersion: 0.9.35

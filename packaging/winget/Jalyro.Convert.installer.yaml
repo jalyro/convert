@@ -18,8 +18,8 @@ UpgradeBehavior: install         # the installer unregisters the sparse package
 
 Installers:
   - Architecture: x64
-    InstallerUrl: https://github.com/jalyro/convert/releases/download/v0.9.35/JalyroConvert-Setup-0.9.35.exe
-    InstallerSha256: REPLACE_ME_WITH_SHA256
+    InstallerUrl: https://github.com/jalyro/convert/releases/download/v0.9.35/JalyroConvert-Setup.exe
+    InstallerSha256: D076D17190254D9543EC52FE429EDD8973F9A739EAE09B93E659AB5FFC7E82E1
 
 ManifestType: installer
 ManifestVersion: 1.6.0
