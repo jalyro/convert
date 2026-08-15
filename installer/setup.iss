@@ -25,7 +25,12 @@ DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 DisableDirPage=yes
 OutputDir=..\dist
-OutputBaseFilename={#AppShortName}-Setup-{#AppVersion}
+; No version in the filename. The download link on the website is
+; /releases/latest/download/JalyroConvert-Setup.exe, and GitHub builds that URL
+; from the asset name - a version in it would break the link every release.
+; The version is still in the release page, the file's version resource and
+; Add/Remove Programs.
+OutputBaseFilename={#AppShortName}-Setup
 Compression=lzma2/max
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64compatible

@@ -53,6 +53,25 @@ if errorlevel 1 exit /b 1
 
 if not exist "%ROOT%\dist" mkdir "%ROOT%\dist"
 
+REM  The output filename no longer carries the version, so a rebuild lands on
+REM  top of whatever is already there. If that file is signed, overwriting it
+REM  throws away a signature that costs real money to replace.
+where signtool.exe >nul 2>&1
+if errorlevel 1 (
+    echo [note] signtool not on PATH - cannot check dist\ for a signed installer.
+) else (
+    for %%f in ("%ROOT%\dist\*.exe") do (
+        signtool.exe verify /pa /q "%%~ff" >nul 2>&1
+        if not errorlevel 1 (
+            echo [FAIL] dist\%%~nxf carries a valid signature.
+            echo        Building would overwrite it, and signing again is not free.
+            echo.
+            echo        Move it somewhere safe first, then run this again.
+            exit /b 1
+        )
+    )
+)
+
 echo.
 echo === Compiling installer ===================================================
 echo.

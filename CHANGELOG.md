@@ -4,6 +4,16 @@ Pre-1.0. Versions before 0.9 were development phases and are not listed
 individually.
 
 ## Unreleased
+- The installer filename no longer carries the version:
+  `JalyroConvert-Setup.exe`, not `JalyroConvert-Setup-0.9.35.exe`. GitHub builds
+  a permanent download URL out of the asset name, so a version in it breaks the
+  website's download button at every release
+- `make-installer.cmd` refuses to build when a signed installer is sitting in
+  `dist\`. With the version gone from the filename, a rebuild lands on top of
+  it, and a signature is a paid operation - losing one to a routine rebuild is
+  not a mistake worth being able to make
+- The website's download button goes straight to the installer instead of the
+  release page, and says what the download weighs before you click it
 - `.github/workflows/pages.yml` publishes `site/` to GitHub Pages at
   https://jalyro.github.io/convert/. A workflow rather than the branch
   setting, because Pages serves only a branch root or `/docs`, and `docs/`
