@@ -1,0 +1,34 @@
+Jalyro Convert — third-party components
+================================================================
+
+Jalyro Convert itself is MIT licensed. It includes and runs the following
+components under their own licences.
+
+FFmpeg — GPL version 2 or later
+----------------------------------------------------------------
+Used for all audio and video conversion, and for decoding HEIC images.
+
+FFmpeg is included as a separate executable and is invoked over its documented
+command-line interface. Its full licence text is installed alongside it, in the
+"ffmpeg" folder inside the installation directory.
+
+The corresponding source code for the FFmpeg build included here is linked from
+the release page this installer came from.
+
+  https://ffmpeg.org
+  https://ffmpeg.org/legal.html
+
+libvips — LGPL version 2.1 or later
+----------------------------------------------------------------
+Used for all still-image conversion.
+
+  https://libvips.org
+
+Patent notice
+----------------------------------------------------------------
+H.264 and H.265 video carry patent obligations that are separate from software
+licensing, and vary by jurisdiction and use. This is the same position as other
+free FFmpeg-based tools.
+
+================================================================
+Jalyro Convert is not affiliated with Microsoft, Apple or Discord.

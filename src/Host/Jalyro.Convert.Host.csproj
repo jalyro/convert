@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Deliberately WPF, not WinUI 3, for Phase 1.
+
+    The design document recommended WinUI 3 but said to switch "without
+    hesitation" if packaging friction appeared. It did: Phase 0 surfaced
+    package-identity inheritance, and stacking a self-contained Windows App SDK
+    on top of a sparse package would make it ambiguous which layer broke.
+    Phase 1 exists to de-risk the plumbing. WinUI 3 gets revisited at Phase 5.
+
+    No XAML files at all - the window is built in code. That removes the
+    ApplicationDefinition / build-action / codegen class of problems entirely,
+    at the cost of a UI nobody will look at twice. Correct trade for a skeleton.
+  -->
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+
+    <AssemblyName>Jalyro.Convert.Host</AssemblyName>
+    <RootNamespace>Jalyro.Convert.Host</RootNamespace>
+    <Version>0.9.31</Version>
+
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+
+    <!--
+      Self-contained. A converter that tells the user to go install a runtime
+      first has already broken the "right-click and it works" promise - which
+      is exactly what happened in testing on 2026-08-09: the .NET SDK was
+      present, the Desktop Runtime was not, and the Host refused to start.
+      Costs ~70 MB and a slower build. Worth it.
+    -->
+    <SelfContained>true</SelfContained>
+
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\Shell\convert.ico</ApplicationIcon>
+
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>

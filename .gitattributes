@@ -1,0 +1,10 @@
+# Line endings are normalised here, not left to each clone's core.autocrlf.
+# The build scripts, manifests and sources are authored CRLF and stay CRLF.
+
+* text=auto eol=crlf
+
+# Binary: never touched.
+*.png binary
+*.ico binary
+*.exe binary
+*.msix binary

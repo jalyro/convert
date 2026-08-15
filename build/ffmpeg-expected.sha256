@@ -1,0 +1,10 @@
+# Expected SHA-256 of src/ffmpeg/ffmpeg.exe.
+#
+# Empty means "unpinned" - fetch-ffmpeg.cmd will warn but continue, which is
+# fine for development. A RELEASE build must have this filled in, so the exact
+# binary shipped can be named in the GPL source offer and an unexpected upstream
+# replacement is detected rather than silently used.
+#
+# To pin: run build\fetch-ffmpeg.cmd, then
+#   certutil -hashfile src\ffmpeg\ffmpeg.exe SHA256
+# and paste the hash below on its own line.

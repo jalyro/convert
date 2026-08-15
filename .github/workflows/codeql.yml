@@ -1,0 +1,62 @@
+name: codeql
+
+# Needs a public repository: code scanning is free there and unavailable on
+# a private one without Advanced Security. This was manual-only until the
+# repository went public. The weekly run catches newly added CodeQL queries
+# on code that has not changed.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  schedule:
+    - cron: '30 4 * * 1'
+  workflow_dispatch:
+
+jobs:
+  analyse:
+    runs-on: windows-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp', 'cpp' ]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+
+      # Not autobuild: it looks for an MSBuild project or solution, and the
+      # shell extension has neither - it is compiled by direct cl.exe calls.
+      # It failed with "unable to automatically build your code".
+      - name: Build C++ for CodeQL
+        if: matrix.language == 'cpp'
+        shell: cmd
+        run: |
+          call build\ci-vcvars.cmd || exit /b 1
+          if not exist out mkdir out
+          rc.exe /nologo /fo out\Shell.res /I src\Shell src\Shell\Shell.rc
+          cl.exe /nologo /c /EHsc /W4 /std:c++20 /permissive- /O2 /MT ^
+                 /DUNICODE /D_UNICODE /DWIN32 /D_WINDOWS /DNDEBUG /I src\Shell ^
+                 /Fo:out\ src\Shell\ExplorerCommand.cpp src\Shell\Common.cpp
+          link.exe /nologo /DLL /DEF:src\Shell\Shell.def /OUT:out\Jalyro.Convert.Shell.dll ^
+                   out\ExplorerCommand.obj out\Common.obj out\Shell.res ^
+                   shlwapi.lib ole32.lib oleaut32.lib shell32.lib user32.lib advapi32.lib kernel32.lib
+
+      - name: Build C# for CodeQL
+        if: matrix.language == 'csharp'
+        run: |
+          dotnet build src/Host/Jalyro.Convert.Host.csproj -c Release --nologo
+          dotnet build src/Worker/Jalyro.Convert.Worker.csproj -c Release --nologo
+
+      - uses: github/codeql-action/analyze@v4

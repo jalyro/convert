@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jalyro Convert — convert files from the Windows 11 menu</title>
+<meta name="description" content="Free, open-source file converter that lives in the Windows 11 right-click menu. Images, audio, video and HEIC. No uploads, no ads, no account.">
+<style>
+  :root {
+    --ink: #16181d;
+    --muted: #5c6270;
+    --line: #e3e6ec;
+    --accent: #0067c0;
+    --bg: #ffffff;
+    --panel: #f7f8fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e8eaee; --muted: #9aa1ae; --line: #2a2e37;
+      --accent: #4cabff; --bg: #14161a; --panel: #1b1e24;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 -apple-system, "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 88px 0 56px; }
+  h1 { font-size: 44px; line-height: 1.12; margin: 0 0 16px; letter-spacing: -0.02em; }
+  .tagline { font-size: 20px; color: var(--muted); margin: 0 0 32px; }
+  .cta {
+    display: inline-block; background: var(--accent); color: #fff;
+    padding: 13px 26px; border-radius: 6px; text-decoration: none; font-weight: 600;
+  }
+  .cta:hover { filter: brightness(1.08); }
+  .cta-note { font-size: 13px; color: var(--muted); margin-top: 12px; }
+  h2 { font-size: 22px; margin: 48px 0 14px; letter-spacing: -0.01em; }
+  p { margin: 0 0 16px; }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 7px; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; padding: 20px 22px; margin: 0 0 20px;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 20px; font-size: 15px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+  th { font-weight: 600; }
+  code {
+    background: var(--panel); border: 1px solid var(--line);
+    padding: 1px 5px; border-radius: 4px; font-size: 14px;
+    font-family: "Cascadia Code", Consolas, monospace;
+  }
+  a { color: var(--accent); }
+  footer {
+    margin-top: 64px; padding: 28px 0 56px;
+    border-top: 1px solid var(--line); font-size: 14px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Right-click a file and convert it.</h1>
+  <p class="tagline">
+    A converter that lives in the Windows 11 menu — not a website, not an app
+    you have to open first.
+  </p>
+  <a class="cta" href="https://github.com/jalyro/convert/releases/latest">Download for Windows 11</a>
+  <div class="cta-note">Free and open source. No account, no uploads, no ads.</div>
+</header>
+
+<h2>What it does</h2>
+<p>
+  Select one file or two hundred, right-click, pick a format. The converted
+  files appear beside the originals. Nothing is uploaded anywhere.
+</p>
+
+<table>
+  <tr><th>Images</th><td>JPG · PNG · WEBP · AVIF · TIFF — in and out. HEIC, HEIF, BMP and GIF in.</td></tr>
+  <tr><th>Video</th><td>MP4 · WEBM out. MOV, MKV, AVI, WMV, FLV and more in.</td></tr>
+  <tr><th>Audio</th><td>MP3 · WAV · FLAC · M4A · OPUS, and extract audio from any video.</td></tr>
+</table>
+
+<h2>HEIC works without buying a codec</h2>
+<div class="panel">
+  <p style="margin:0">
+    iPhone photos are HEIC, and Windows normally asks you to buy the HEVC
+    extension from the Microsoft Store to open them. Jalyro Convert
+    decodes HEIC itself. Nothing to buy, nothing to install.
+  </p>
+</div>
+
+<h2>It preserves quality</h2>
+<p>
+  Most converters re-encode at a fixed quality, which either bloats an
+  already-compressed file or throws away detail from a good one. This one reads
+  what the source was saved at and matches it. Lossless formats stay lossless:
+  PNG to WEBP discards nothing at all.
+</p>
+<p>
+  Compression happens only when you ask for it — <em>Compress for email</em> and
+  <em>Discord-friendly</em> work backwards from a real size limit rather than
+  guessing at settings.
+</p>
+
+<h2>It stays out of the way</h2>
+<ul>
+  <li>Appears in the main Windows 11 menu, not under “Show more options”.</li>
+  <li>One image converts silently — no window, no notification.</li>
+  <li>Batches show progress and can be cancelled.</li>
+  <li>Never overwrites anything. Collisions become <code>photo (1).jpg</code>.</li>
+  <li>Runs the conversion outside Explorer, so a broken file can’t take your desktop down.</li>
+</ul>
+
+<h2>Requirements</h2>
+<p>Windows 11 (22H2 or later), 64-bit.</p>
+
+<h2>Open source</h2>
+<p>
+  MIT licensed. The code, the design document and a written record of every
+  architectural finding — including the mistakes — are on
+  <a href="https://github.com/jalyro/convert">GitHub</a>.
+</p>
+
+<footer>
+  <p>
+    Jalyro Convert bundles <a href="https://ffmpeg.org">FFmpeg</a> under the
+    GPL v2 or later, and <a href="https://libvips.org">libvips</a> under the
+    LGPL v2.1 or later. Licence texts ship with the application; corresponding
+    source is linked from each release.
+  </p>
+  <p>Jalyro Convert is made by Petrus Sprenkels. MIT licensed · not affiliated with Microsoft, Apple or Discord.</p>
+</footer>
+
+</div>
+</body>
+</html>

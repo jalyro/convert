@@ -1,0 +1,33 @@
+#include "resource.h"
+#include <windows.h>
+
+IDI_CONVERT ICON "convert.ico"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION    0,9,31,0
+ PRODUCTVERSION 0,9,31,0
+ FILEFLAGSMASK  0x3fL
+ FILEFLAGS      0x0L
+ FILEOS         VOS_NT_WINDOWS32
+ FILETYPE       VFT_DLL
+ FILESUBTYPE    VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName",      "Petrus Sprenkels"
+            VALUE "FileDescription",  "Jalyro Convert shell extension"
+            VALUE "FileVersion",      "0.9.31.0"
+            VALUE "InternalName",     "Jalyro.Convert.Shell.dll"
+            VALUE "LegalCopyright",   "Copyright (c) 2026 Petrus Sprenkels. MIT licensed."
+            VALUE "OriginalFilename", "Jalyro.Convert.Shell.dll"
+            VALUE "ProductName",      "Jalyro Convert"
+            VALUE "ProductVersion",   "0.9.31.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END

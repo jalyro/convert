@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  Sparse (identity-only) package for Jalyro Convert.
+
+  ============================================================================
+  BEFORE YOU BUILD: replace the placeholder Publisher value below.
+  ============================================================================
+
+  1. Identity/@Publisher MUST match your code-signing certificate's Subject
+     CHARACTER FOR CHARACTER, including comma placement, spacing and the order
+     of the RDN components. Do not hand-type it.
+
+     Get the exact string with:
+         build\get-cert-subject.cmd
+
+     signtool will refuse to sign with:
+         "signing certificate subject name (...) does not match
+          package manifest publisher (...)"
+     and the difference is often a single space or comma.
+
+  2. Properties/PublisherDisplayName is cosmetic - any string.
+
+  ============================================================================
+  Why the pieces are here
+  ============================================================================
+
+  uap10:AllowExternalContent
+      Makes this a sparse package: the manifest may reference files that live
+      outside the .msix, at the path passed to -ExternalLocation. Requires
+      MinVersion 10.0.19041.0 or later.
+
+  ProcessorArchitecture="neutral"
+      This package contains no binaries of its own - only the manifest and
+      visual assets. The actual DLL and EXE are x64 and live in the external
+      location.
+
+  com:SurrogateServer
+      THE key line. It registers the CLSID for out-of-process activation, so
+      Windows loads Jalyro.Convert.Shell.dll into dllhost.exe rather than
+      into explorer.exe. If the shell extension faults, dllhost dies and
+      Explorer keeps running.
+
+      Swapping this for an in-process registration is what puts your code back
+      inside Explorer. Don't.
+
+  desktop4:FileExplorerContextMenus
+      Registers the CLSID as a Windows 11 primary-menu command. This is what
+      gets you out of "Show more options".
+
+      ItemType Type="*" means "offer for every file"; the actual filtering is
+      done in code, in IExplorerCommand::GetState, by returning ECS_HIDDEN.
+-->
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+  xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
+  IgnorableNamespaces="uap uap10 rescap com desktop4 desktop5">
+
+  <Identity
+    Name="Jalyro.Convert"
+    Publisher="CN=REPLACE_ME_WITH_EXACT_CERT_SUBJECT"
+    Version="0.9.31.0"
+    ProcessorArchitecture="neutral" />
+
+  <Properties>
+    <DisplayName>Jalyro Convert</DisplayName>
+    <PublisherDisplayName>Sprenkels Media</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily
+      Name="Windows.Desktop"
+      MinVersion="10.0.19041.0"
+      MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="unvirtualizedResources" />
+  </Capabilities>
+
+  <Applications>
+    <Application
+      Id="JalyroConvert"
+      Executable="Jalyro.Convert.Host.exe"
+      uap10:TrustLevel="mediumIL"
+      uap10:RuntimeBehavior="win32App">
+
+      <uap:VisualElements
+        DisplayName="Jalyro Convert"
+        Description="Convert images, audio and video from the right-click menu"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png"
+        AppListEntry="none" />
+
+      <Extensions>
+
+        <!-- Out-of-process COM registration: DLL loads into dllhost.exe -->
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:SurrogateServer DisplayName="Jalyro Convert shell extension">
+              <com:Class
+                Id="EF3A7DDF-F221-42D9-9227-EB522E46F971"
+                Path="Jalyro.Convert.Shell.dll"
+                ThreadingModel="STA" />
+            </com:SurrogateServer>
+          </com:ComServer>
+        </com:Extension>
+
+        <!-- Windows 11 primary context menu registration -->
+        <desktop4:Extension Category="windows.fileExplorerContextMenus">
+          <desktop4:FileExplorerContextMenus>
+            <desktop5:ItemType Type="*">
+              <desktop5:Verb
+                Id="JalyroConvert"
+                Clsid="EF3A7DDF-F221-42D9-9227-EB522E46F971" />
+            </desktop5:ItemType>
+          </desktop4:FileExplorerContextMenus>
+        </desktop4:Extension>
+
+      </Extensions>
+    </Application>
+  </Applications>
+
+</Package>

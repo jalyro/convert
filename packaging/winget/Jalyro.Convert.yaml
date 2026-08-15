@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.version.1.6.0.schema.json
+#
+# Submit with:  wingetcreate submit packaging/winget
+# or open a PR against microsoft/winget-pkgs.
+#
+# REPLACE_ME markers must be filled before submission.
+
+PackageIdentifier: Jalyro.Convert
+PackageVersion: 0.9.31
+DefaultLocale: en-US
+ManifestType: version
+ManifestVersion: 1.6.0

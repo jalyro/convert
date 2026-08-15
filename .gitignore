@@ -1,0 +1,26 @@
+# Build output
+out/
+stage/
+pkgsrc/
+dist/
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# ffmpeg is fetched, not committed.
+# ~80 MB, GPL, and versioned independently. build/fetch-ffmpeg.cmd gets it.
+src/ffmpeg/
+
+# Signing material never goes in the repo.
+*.pfx
+*.p12
+*.cer
+*.snk
+dev-cert.cer
+
+# OS noise
+Thumbs.db
+desktop.ini
+.DS_Store

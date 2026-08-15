@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+
+  <!--
+    No assemblyIdentity. It carries no weight for an apphost-embedded manifest
+    and would be one more version string to keep in step at every release.
+  -->
+
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
+    </application>
+  </compatibility>
+
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <!--
+        This process opens the user's files, and libvips is not long-path aware
+        on its own. The Host has had this since 0.9.x; the Worker did not, so
+        the only process that actually touches user paths was the one without
+        it. Needs LongPathsEnabled=1 in the registry to take effect.
+        No dpiAwareness: the Worker has no UI.
+      -->
+      <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
+    </windowsSettings>
+  </application>
+</assembly>
