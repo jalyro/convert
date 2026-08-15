@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
 
 PackageIdentifier: Jalyro.Convert
-PackageVersion: 0.9.31
+PackageVersion: 0.9.32
 PackageLocale: en-US
 
 Publisher: Petrus Sprenkels
@@ -41,7 +41,7 @@ Tags:
   - ffmpeg
   - context-menu
 
-ReleaseNotesUrl: https://github.com/jalyro/convert/releases/tag/v0.9.31
+ReleaseNotesUrl: https://github.com/jalyro/convert/releases/tag/v0.9.32
 
 ManifestType: defaultLocale
 ManifestVersion: 1.6.0

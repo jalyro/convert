@@ -35,6 +35,11 @@ jobs:
       - uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
+          # Without this the C++ database finalized with "detected code
+          # written in C/C++ but could not process any of it": the build ran
+          # untraced. manual is what the steps below already are - a build
+          # between init and analyze - but it has to be stated.
+          build-mode: manual
 
       # Not autobuild: it looks for an MSBuild project or solution, and the
       # shell extension has neither - it is compiled by direct cl.exe calls.

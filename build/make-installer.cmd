@@ -68,5 +68,5 @@ echo [ok] Installer built:
 dir /b "%ROOT%\dist\*.exe"
 echo.
 echo  Sign it before distributing:
-echo      signtool sign /sha1 ^<thumbprint^> /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 "%ROOT%\dist\JalyroConvert-Setup-0.9.31.exe"
+echo      signtool sign /sha1 ^<thumbprint^> /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 "%ROOT%\dist\JalyroConvert-Setup-0.9.32.exe"
 exit /b 0

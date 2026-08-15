@@ -3,6 +3,12 @@
 Pre-1.0. Versions before 0.9 were development phases and are not listed
 individually.
 
+## 0.9.32
+- CodeQL `init` now sets `build-mode: manual`. The C++ database finalized
+  with "detected code written in C/C++ but could not process any of it" -
+  the build between `init` and `analyze` ran untraced while the action
+  reported the build mode as `undefined`. The C# leg was unaffected
+
 ## 0.9.31
 - The dev certificate subject no longer carries a locality (`L=`). It is
   personal data and this repository is public; the subject keeps `O=` and

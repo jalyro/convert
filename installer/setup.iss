@@ -11,7 +11,7 @@
 
 #define AppName        "Jalyro Convert"
 #define AppShortName   "JalyroConvert"
-#define AppVersion     "0.9.31"
+#define AppVersion     "0.9.32"
 #define AppPublisher   "Petrus Sprenkels"
 #define PackageName    "Jalyro.Convert"
 
