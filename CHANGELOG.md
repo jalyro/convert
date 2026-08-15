@@ -3,7 +3,15 @@
 Pre-1.0. Versions before 0.9 were development phases and are not listed
 individually.
 
-## Unreleased
+## 0.9.36
+- The installer no longer blocks an unattended install. Three `MsgBox` calls
+  in `[Code]` ignored `/SUPPRESSMSGBOXES` - Inno only suppresses
+  `SuppressibleMsgBox` - so a silent install sat waiting for a click that
+  never came. winget's validation sandbox timed out after 126 minutes on
+  exactly this. Defaults when suppressed: do not switch the shell menu
+  setting, do not restart Explorer
+- A silent uninstall no longer kills `explorer.exe`. `RestartExplorer` ran
+  unconditionally, and winget's validation uninstalls too
 - The winget manifests carry the real installer hash and the corrected asset
   name, so `packaging/winget` is submittable rather than a template
 - The installer filename no longer carries the version:

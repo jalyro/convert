@@ -11,7 +11,7 @@
 
 #define AppName        "Jalyro Convert"
 #define AppShortName   "JalyroConvert"
-#define AppVersion     "0.9.35"
+#define AppVersion     "0.9.36"
 #define AppPublisher   "Petrus Sprenkels"
 #define PackageName    "Jalyro.Convert"
 
@@ -127,13 +127,15 @@ begin
     'Add-AppxPackage -Path ''' + PsQuote(ExpandConstant('{app}\{#PackageName}.msix')) +
     ''' -ExternalLocation ''' + PsQuote(ExpandConstant('{app}')) + '''';
 
+  // SuppressibleMsgBox, not MsgBox: MsgBox ignores /SUPPRESSMSGBOXES and blocks
+  // forever in an unattended install. This is what timed out winget's sandbox.
   if not RunPowerShell(Script, ResultCode) or (ResultCode <> 0) then
-    MsgBox('The context menu entry could not be registered (code ' +
+    SuppressibleMsgBox('The context menu entry could not be registered (code ' +
            IntToStr(ResultCode) + ').' + #13#10#13#10 +
            'The application is installed, but "Convert to" will not appear ' +
            'until registration succeeds. Launching the app will retry ' +
            'automatically.',
-           mbError, MB_OK);
+           mbError, MB_OK, IDOK);
 end;
 
 procedure UnregisterSparsePackage();
@@ -166,13 +168,15 @@ begin
   if not ClassicMenuOverrideIsSet() then
     Exit;
 
-  if MsgBox(
+  // Default IDNO when suppressed: an unattended install must not silently
+  // change a shell setting the user chose.
+  if SuppressibleMsgBox(
       'Windows is currently configured to use the classic (Windows 10) ' +
       'context menu.' + #13#10#13#10 +
       'While that setting is active, "Convert to" cannot appear in the ' +
       'right-click menu at all.' + #13#10#13#10 +
       'Switch back to the Windows 11 context menu now?',
-      mbConfirmation, MB_YESNO) = IDYES then
+      mbConfirmation, MB_YESNO, IDNO) = IDYES then
   begin
     RegDeleteKeyIncludingSubkeys(HKEY_CURRENT_USER,
       'Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}');
@@ -213,13 +217,16 @@ begin
     // On a machine with many shell extensions the restart took ~30 seconds
     // with a dead taskbar - which reads as "the installer broke my PC", and
     // the user blames us. Offer it instead, and say what the alternative is.
-    if MsgBox('The context menu entry is registered.' + #13#10#13#10 +
+    // Default IDNO when suppressed. Killing explorer.exe unasked is hostile,
+    // and in a headless sandbox there is no Explorer to restart anyway. The
+    // menu appears at next sign-in.
+    if SuppressibleMsgBox('The context menu entry is registered.' + #13#10#13#10 +
               'File Explorer needs to restart before "Convert to" appears. ' +
               'This takes a few seconds, and any open Explorer windows will ' +
               'close.' + #13#10#13#10 +
               'Restart File Explorer now? (Choosing No means it appears after ' +
               'your next sign-in.)',
-              mbConfirmation, MB_YESNO) = IDYES then
+              mbConfirmation, MB_YESNO, IDNO) = IDYES then
       RestartExplorer();
   end;
 end;
@@ -233,6 +240,9 @@ begin
   end
   else if CurUninstallStep = usPostUninstall then
   begin
-    RestartExplorer();
+    // Not during a silent uninstall: taskkill on explorer.exe is not something
+    // to do to a machine nobody is sitting at.
+    if not UninstallSilent() then
+      RestartExplorer();
   end;
 end;

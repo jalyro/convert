@@ -11,7 +11,7 @@
 # so older clients can still install; the community repository lags the newest.
 
 PackageIdentifier: Jalyro.Convert
-PackageVersion: 0.9.35
+PackageVersion: 0.9.36
 DefaultLocale: en-US
 ManifestType: version
 ManifestVersion: 1.6.0
