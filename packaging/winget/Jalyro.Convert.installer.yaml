@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
 
 PackageIdentifier: Jalyro.Convert
-PackageVersion: 0.9.34
+PackageVersion: 0.9.35
 
 MinimumOSVersion: 10.0.22621.0   # Windows 11 22H2 - IExplorerCommand in the primary menu
 
@@ -18,7 +18,7 @@ UpgradeBehavior: install         # the installer unregisters the sparse package
 
 Installers:
   - Architecture: x64
-    InstallerUrl: https://github.com/jalyro/convert/releases/download/v0.9.34/JalyroConvert-Setup-0.9.34.exe
+    InstallerUrl: https://github.com/jalyro/convert/releases/download/v0.9.35/JalyroConvert-Setup-0.9.35.exe
     InstallerSha256: REPLACE_ME_WITH_SHA256
 
 ManifestType: installer

@@ -87,15 +87,26 @@ Two ways round it:
   and put that hash in `build\ffmpeg-expected.sha256`, which is how the
   build verifies the binary from then on.
 
-Put your certificate's exact Subject in `Publisher` in
-`package\AppxManifest.xml` (`build\get-cert-subject.cmd` prints it), then:
+Point the manifest at your certificate, then build. The committed
+`Publisher` is a placeholder — a certificate subject is personal data, so it is
+written in at build time and taken out again before committing:
 
 ```bat
+build\get-cert-subject.cmd            :: lists certificates and thumbprints
+build\set-publisher.cmd <thumbprint>
 build\build.cmd
 build\make-package.cmd
 build\sign.cmd <thumbprint>
 build\install.cmd
 ```
+
+```bat
+build\set-publisher.cmd /revert       :: before committing
+```
+
+`docs/signing.md` covers the rest: why the subject must match character for
+character, why changing certificate changes package identity, and what a
+publicly issued certificate does differently.
 
 `CONTRIBUTING.md` lists the traps. `docs/decisions.md` explains why the
 architecture is shaped the way it is — read it before changing anything

@@ -4,11 +4,12 @@ setlocal EnableExtensions
 REM ===========================================================================
 REM  get-cert-subject.cmd
 REM
-REM  Prints the exact Subject string of each code-signing certificate in your
-REM  personal store, formatted ready to paste into AppxManifest.xml.
+REM  Lists the code-signing certificates in your personal store, and prints the
+REM  set-publisher command for each.
 REM
 REM  The Publisher attribute in the manifest must match the certificate Subject
-REM  CHARACTER FOR CHARACTER. Copy the line this prints - do not retype it.
+REM  CHARACTER FOR CHARACTER, so nothing here asks you to retype it: pass the
+REM  thumbprint to set-publisher.cmd and it copies the subject itself.
 REM ===========================================================================
 
 echo.
@@ -25,8 +26,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "  Write-Host ('Expires    : ' + $x.NotAfter);" ^
   "  Write-Host ('Subject    : ' + $x.Subject);" ^
   "  Write-Host '';" ^
-  "  Write-Host 'Paste this into AppxManifest.xml:' -ForegroundColor Green;" ^
-  "  Write-Host ('    Publisher=\"' + $x.Subject + '\"') -ForegroundColor Green;" ^
+  "  Write-Host 'Point the manifest at it with:' -ForegroundColor Green;" ^
+  "  Write-Host ('    build\set-publisher.cmd ' + $x.Thumbprint) -ForegroundColor Green;" ^
   "  Write-Host ('-' * 74);" ^
   "}"
 

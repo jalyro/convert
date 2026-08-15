@@ -24,7 +24,9 @@ set "THUMB=%~1"
 
 REM RFC-3161 timestamp server. Any public one works; this is DigiCert's.
 REM Without a timestamp your signatures die the day the certificate expires.
-set "TSURL=http://timestamp.digicert.com"
+REM Override before calling to use another, e.g. SSL.com's own:
+REM     set "TSURL=http://ts.ssl.com"
+if not defined TSURL set "TSURL=http://timestamp.digicert.com"
 
 where signtool.exe >nul 2>&1
 if errorlevel 1 (
@@ -88,6 +90,9 @@ echo ===========================================================================
 echo  SIGNING OK
 echo.
 echo  Next: build\install.cmd
+echo.
+echo  The installer is signed separately, after make-installer.cmd:
+echo      build\sign-installer.cmd %THUMB%
 echo ===========================================================================
 exit /b 0
 

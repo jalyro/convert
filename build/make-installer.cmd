@@ -67,6 +67,7 @@ echo.
 echo [ok] Installer built:
 dir /b "%ROOT%\dist\*.exe"
 echo.
-echo  Sign it before distributing:
-echo      signtool sign /sha1 ^<thumbprint^> /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 "%ROOT%\dist\JalyroConvert-Setup-0.9.34.exe"
+echo  Sign it before distributing - it is the file users download, and its
+echo  signature is the one SmartScreen and the UAC prompt show:
+echo      build\sign-installer.cmd ^<thumbprint^>
 exit /b 0

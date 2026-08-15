@@ -12,15 +12,20 @@ build\make-dev-cert.cmd      :: once - Windows will not install an unsigned MSIX
 build\fetch-ffmpeg.cmd       :: once - ffmpeg is not committed
 ```
 
-Then edit `package\AppxManifest.xml` to carry your certificate's exact Subject
-in `Publisher`, and:
+Then point the manifest at your certificate and build:
 
 ```bat
+build\get-cert-subject.cmd            :: lists certificates and thumbprints
+build\set-publisher.cmd <thumbprint>
 build\build.cmd
 build\make-package.cmd
 build\sign.cmd <thumbprint>
 build\install.cmd
 ```
+
+`build\set-publisher.cmd /revert` puts the committed placeholder back. Do that
+before every commit: the manifest and `build\ffmpeg-expected.sha256` are the
+two files a build modifies. See `docs/signing.md`.
 
 Everything must run from the **x64 Native Tools Command Prompt for VS 2026**.
 
@@ -46,7 +51,11 @@ Collected from real debugging sessions; each one cost hours.
 - **The classic context menu override hides the extension entirely.** If the
   menu never appears, run `build\check-menu-mode.cmd`.
 - **`AppxManifest.xml` `Publisher` must match your certificate Subject
-  character for character.** Copy it from `get-cert-subject.cmd`; never retype.
+  character for character.** Never retype it - `set-publisher.cmd <thumbprint>`
+  copies it out of the certificate store.
+- **Changing certificate changes package identity.** The family name is a hash
+  of the Publisher string, so the old registration must be removed with
+  `build\uninstall.cmd` before installing the new one.
 
 ## What CI checks, and what it does not
 

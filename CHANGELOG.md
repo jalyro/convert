@@ -3,6 +3,33 @@
 Pre-1.0. Versions before 0.9 were development phases and are not listed
 individually.
 
+## 0.9.35
+- `build\set-publisher.cmd <thumbprint>` and `build\set-publisher.cmd /revert`
+  replace the two hand-pasted one-liners that patched and restored
+  `Identity/@Publisher`. Both matched one certificate subject as a literal, so
+  both stopped working the moment a different certificate was used - and the
+  revert is the one that fails silently, leaving a real name and address in a
+  commit. The subject is now read from the store by thumbprint, XML-escaped,
+  and written back with a bytewise CRLF check and a read-back comparison. The
+  certificate is rejected if it has no private key, has expired, or carries an
+  EKU list without Code Signing
+- `build\sign-installer.cmd <thumbprint>` signs the installer. Nothing signed
+  it before: `make-installer.cmd` echoed a signtool line carrying a hardcoded
+  version number and left it at that. The setup .exe is the file users
+  download, so its signature is the one SmartScreen shows - leaving it unsigned
+  wastes every signature packed inside it. It finds the single .exe in `dist\`
+  rather than composing a filename from a version held in nine places
+- `install.cmd` refuses to register when a Jalyro.Convert package is already
+  registered under a different publisher. The family name is a hash of the
+  Publisher string, so that is a separate package: Windows registers both, both
+  claim the same CLSID and verb, and the menu ends up with two entries
+- The timestamp server in both signing scripts can be overridden with `TSURL`
+- `get-cert-subject.cmd` prints a runnable `set-publisher.cmd` line per
+  certificate instead of a manifest line to copy by hand
+- `docs/signing.md`: the Publisher rule, why changing certificate changes
+  package identity, what is signed and what is not (the uninstaller Inno embeds
+  is not), and how a cloud certificate differs from the development one
+
 ## 0.9.34
 - `stop-host.cmd` could kill an unrelated ffmpeg. Roots were compared with
   `StartsWith` and no trailing separator, so a tree beside this one -

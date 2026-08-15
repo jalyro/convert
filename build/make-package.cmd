@@ -36,8 +36,8 @@ findstr /C:"REPLACE_ME_WITH_EXACT_CERT_SUBJECT" "%ROOT%\package\AppxManifest.xml
 if not errorlevel 1 (
     echo [FAIL] AppxManifest.xml Publisher is still the placeholder.
     echo.
-    echo        Run  build\get-cert-subject.cmd  and paste the exact certificate
-    echo        Subject into the Publisher attribute.
+    echo        build\get-cert-subject.cmd        lists your certificates
+    echo        build\set-publisher.cmd ^<thumb^>   writes the subject in
     exit /b 1
 )
 

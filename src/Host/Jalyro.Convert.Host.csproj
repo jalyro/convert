@@ -25,7 +25,7 @@
 
     <AssemblyName>Jalyro.Convert.Host</AssemblyName>
     <RootNamespace>Jalyro.Convert.Host</RootNamespace>
-    <Version>0.9.34</Version>
+    <Version>0.9.35</Version>
 
     <PlatformTarget>x64</PlatformTarget>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>

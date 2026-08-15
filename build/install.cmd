@@ -19,6 +19,36 @@ if not exist "%STAGE%\Jalyro.Convert.msix" (
     exit /b 1
 )
 
+REM  The package family name is a hash of the Publisher string, so a different
+REM  certificate is a different package. Windows would register both, and both
+REM  claim the same CLSID and the same verb - two Convert entries in the menu,
+REM  one of them pointing at a stage that no longer exists.
+set "MANIFEST_PUBLISHER="
+for /f "usebackq delims=" %%p in (`powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0set-publisher.ps1" -Show`) do set "MANIFEST_PUBLISHER=%%p"
+
+if not defined MANIFEST_PUBLISHER (
+    echo [FAIL] Could not read Publisher from package\AppxManifest.xml.
+    echo        Run  build\set-publisher.cmd ^<thumbprint^>  first.
+    exit /b 1
+)
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+  "$bad = @();" ^
+  "foreach ($x in @(Get-AppxPackage -Name 'Jalyro.Convert')) {" ^
+  "  if ($x.Publisher -ne $env:MANIFEST_PUBLISHER) { $bad += $x } };" ^
+  "if (-not $bad) { exit 0 };" ^
+  "Write-Host '[FAIL] a Jalyro.Convert package is registered under a different' -ForegroundColor Red;" ^
+  "Write-Host '       publisher, so this build is a separate package:' -ForegroundColor Red;" ^
+  "foreach ($x in $bad) {" ^
+  "  Write-Host ('         ' + $x.PackageFullName);" ^
+  "  Write-Host ('         ' + $x.Publisher) };" ^
+  "Write-Host '';" ^
+  "Write-Host '       Remove it first, or the menu will carry two entries:';" ^
+  "Write-Host '           build\uninstall.cmd';" ^
+  "exit 1"
+
+if errorlevel 1 exit /b 1
+
 echo.
 echo === Registering sparse package ============================================
 echo.
